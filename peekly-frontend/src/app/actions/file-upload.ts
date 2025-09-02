@@ -161,11 +161,11 @@ export async function uploadFileToFilecoin(data: FileUploadData) {
     console.log("File buffer created, size:", fileBuffer.length);
 
     console.log("Creating Synapse instance...");
-    // Create Synapse instance - try disabling CDN to avoid signing issues
+    // Create Synapse instance - try using Ethereum-compatible RPC endpoint
     const synapse = await Synapse.create({
       withCDN: false, // Disable CDN to avoid signing issues
       privateKey: process.env.SYNAPSE_PRIVATE_KEY,
-      rpcURL: "https://api.calibration.node.glif.io/rpc/v1",
+      rpcURL: "https://rpc.ankr.com/filecoin_testnet", // Try Ethereum-compatible endpoint
     });
     console.log("Synapse instance created successfully");
     // const amount = ethers.parseUnits("8", 18); // 8 USDFC
