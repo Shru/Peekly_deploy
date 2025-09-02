@@ -14,10 +14,9 @@ export async function GET(request: NextRequest) {
     // Test 2: Try to create Synapse instance
     console.log("Creating Synapse instance...");
     const synapse = await Synapse.create({
-      withCDN: true,
+      withCDN: false, // Disable CDN to avoid signing issues
       privateKey: process.env.SYNAPSE_PRIVATE_KEY,
-      // Remove RPC URL to use default configuration
-      // rpcURL: "https://api.calibration.node.glif.io/rpc/v1",
+      rpcURL: "https://api.calibration.node.glif.io/rpc/v1",
     });
     console.log("Synapse instance created successfully");
 
