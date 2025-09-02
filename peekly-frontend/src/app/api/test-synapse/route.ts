@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     console.log("Creating Synapse instance...");
     const synapse = await Synapse.create({
       privateKey: process.env.SYNAPSE_PRIVATE_KEY,
-      rpcURL: "https://filecoin-calibration.chainup.net/rpc/v1", // Try ChainupCloud endpoint
+      rpcURL: "https://api.calibration.node.glif.io/rpc/v1", // Back to Glif endpoint
     });
     console.log("Synapse instance created successfully");
 
