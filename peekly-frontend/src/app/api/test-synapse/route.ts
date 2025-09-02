@@ -14,9 +14,8 @@ export async function GET(request: NextRequest) {
     // Test 2: Try to create Synapse instance
     console.log("Creating Synapse instance...");
     const synapse = await Synapse.create({
-      withCDN: false, // Disable CDN to avoid signing issues
       privateKey: process.env.SYNAPSE_PRIVATE_KEY,
-      rpcURL: "https://rpc.ankr.com/filecoin_testnet", // Try Ethereum-compatible endpoint
+      rpcURL: "https://api.calibration.node.glif.io/rpc/v1",
     });
     console.log("Synapse instance created successfully");
 
