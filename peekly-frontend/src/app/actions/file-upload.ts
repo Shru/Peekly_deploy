@@ -161,10 +161,10 @@ export async function uploadFileToFilecoin(data: FileUploadData) {
     console.log("File buffer created, size:", fileBuffer.length);
 
     console.log("Creating Synapse instance...");
-    // Create Synapse instance - try minimal configuration
+    // Create Synapse instance - try ChainupCloud endpoint
     const synapse = await Synapse.create({
       privateKey: process.env.SYNAPSE_PRIVATE_KEY,
-      rpcURL: "https://api.calibration.node.glif.io/rpc/v1",
+      rpcURL: "https://filecoin-calibration.chainup.net/rpc/v1", // Try ChainupCloud endpoint
     });
     console.log("Synapse instance created successfully");
     // const amount = ethers.parseUnits("8", 18); // 8 USDFC
