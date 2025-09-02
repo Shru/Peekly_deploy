@@ -165,7 +165,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Oshadhi Liyanage\\Learnings\\Dev3pack\\Peekly\\peekly-frontend\\src\\generated\\prisma",
+      "value": "/home/shruti/Documents/Peekly_deploy/peekly-frontend/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -174,12 +174,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "debian-openssl-3.0.x",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Oshadhi Liyanage\\Learnings\\Dev3pack\\Peekly\\peekly-frontend\\prisma\\schema.prisma",
+    "sourceFilePath": "/home/shruti/Documents/Peekly_deploy/peekly-frontend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

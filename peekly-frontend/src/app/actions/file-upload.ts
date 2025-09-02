@@ -142,19 +142,37 @@ export async function createPostOnly(data: CreatePostData) {
 
 export async function uploadFileToFilecoin(data: FileUploadData) {
   try {
+    console.log("Starting uploadFileToFilecoin with data:", {
+      hasFileData: !!data.fileData,
+      description: data.description,
+      price: data.price,
+      userId: data.userId,
+      creatorAddress: data.creatorAddress,
+      fileDataLength: data.fileData?.length || 0
+    });
+
+    // Check if private key is available
+    if (!process.env.SYNAPSE_PRIVATE_KEY) {
+      throw new Error("SYNAPSE_PRIVATE_KEY environment variable is not set");
+    }
+
     // Convert base64 data back to buffer
     const fileBuffer = Buffer.from(data.fileData, "base64");
+    console.log("File buffer created, size:", fileBuffer.length);
 
+    console.log("Creating Synapse instance...");
     // Create Synapse instance
     const synapse = await Synapse.create({
       withCDN: true,
       privateKey: process.env.SYNAPSE_PRIVATE_KEY,
       rpcURL: "https://api.calibration.node.glif.io/rpc/v1",
     });
+    console.log("Synapse instance created successfully");
     // const amount = ethers.parseUnits("8", 18); // 8 USDFC
     // await synapse.payments.deposit(amount, TOKENS.USDFC);
 
     // Check current allowance
+    console.log("Checking current allowance...");
     const paymentsContract = CONTRACT_ADDRESSES.PAYMENTS[synapse.getNetwork()];
     const currentAllowance = await synapse.payments.allowance(
       TOKENS.USDFC,
@@ -163,6 +181,7 @@ export async function uploadFileToFilecoin(data: FileUploadData) {
     console.log("Current allowance", currentAllowance);
 
     // 2. Approve the Pandora service for automated payments
+    console.log("Approving Pandora service...");
     const pandoraAddress =
       CONTRACT_ADDRESSES.PANDORA_SERVICE[synapse.getNetwork()];
     await synapse.payments.approveService(
@@ -172,10 +191,13 @@ export async function uploadFileToFilecoin(data: FileUploadData) {
     );
     console.log("Pandora service approved");
 
-    // Create storage service3
+    // Create storage service
+    console.log("Creating storage service...");
     const storage = await synapse.createStorage();
+    console.log("Storage service created");
 
     // Upload file to Filecoin
+    console.log("Uploading file to Filecoin...");
     const uploadResult = await storage.upload(fileBuffer);
     console.log("Upload result", uploadResult);
     const fileCoinCid = String(uploadResult.commp);
@@ -211,15 +233,18 @@ export async function uploadFileToFilecoin(data: FileUploadData) {
     };
   } catch (error) {
     console.error("Server-side file upload failed:", error);
-    console.log(
-      "error",
-      error instanceof Error ? error.message : "Unknown error"
-    );
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
+    });
 
     let errorMessage = "File upload failed";
 
     if (error instanceof Error) {
-      if (error.message.includes("No Pandora service address configured")) {
+      if (error.message.includes("SYNAPSE_PRIVATE_KEY environment variable is not set")) {
+        errorMessage = "Filecoin service not configured. Please contact support.";
+      } else if (error.message.includes("No Pandora service address configured")) {
         errorMessage =
           "Network configuration error. Please use calibration testnet or configure a valid RPC URL with Pandora service.";
       } else if (error.message.includes("RetCode=33")) {
@@ -234,6 +259,8 @@ export async function uploadFileToFilecoin(data: FileUploadData) {
       } else if (error.message.includes("Failed to create post in database")) {
         errorMessage =
           "File uploaded but failed to create post in database. Please try again.";
+      } else if (error.message.includes("User with ID")) {
+        errorMessage = error.message;
       } else {
         errorMessage = `Upload failed: ${error.message}`;
       }
