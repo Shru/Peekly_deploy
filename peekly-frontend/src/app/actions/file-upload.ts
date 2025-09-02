@@ -161,11 +161,12 @@ export async function uploadFileToFilecoin(data: FileUploadData) {
     console.log("File buffer created, size:", fileBuffer.length);
 
     console.log("Creating Synapse instance...");
-    // Create Synapse instance
+    // Create Synapse instance - try without specifying RPC URL to use default
     const synapse = await Synapse.create({
       withCDN: true,
       privateKey: process.env.SYNAPSE_PRIVATE_KEY,
-      rpcURL: "https://api.calibration.node.glif.io/rpc/v1",
+      // Remove RPC URL to use default configuration
+      // rpcURL: "https://api.calibration.node.glif.io/rpc/v1",
     });
     console.log("Synapse instance created successfully");
     // const amount = ethers.parseUnits("8", 18); // 8 USDFC
